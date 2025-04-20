@@ -1,0 +1,426 @@
+<!doctype html>
+<html lang="id"> 
+ <head> 
+  <meta charset="UTF-8"> 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+  <title>Kalkulator Gaji</title> 
+  <style>
+      body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        padding: 20px;
+        background: linear-gradient(to right, #e0f7fa, #f0f4f8);
+        color: #333;
+        transition: background 0.3s ease, color 0.3s ease;
+      }
+
+      .dark-mode {
+        background: #0f172a;
+        color: #f1f5f9;
+      }
+
+      .container {
+        max-width: 600px;
+        margin: auto;
+        background-color: #ffffff;
+        padding: 30px;
+        border-radius: 16px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        transition: background 0.3s ease;
+      }
+
+      .dark-mode .container {
+        background-color: #1e293b;
+      }
+
+      h1 {
+        text-align: center;
+        color: #1d4ed8;
+        margin-bottom: 30px;
+      }
+
+      .dark-mode h1 {
+        color: #93c5fd;
+      }
+
+      input {
+        width: 100%;
+        padding: 12px;
+        margin-bottom: 20px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        font-size: 16px;
+        background-color: #fff;
+        color: #000;
+      }
+
+      .dark-mode input {
+        background-color: #334155;
+        color: #f1f5f9;
+        border-color: #475569;
+      }
+
+      button {
+        width: 100%;
+        padding: 12px;
+        background-color: #1d4ed8;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background 0.3s ease;
+      }
+
+      button:hover {
+        background-color: #2563eb;
+      }
+
+      .result {
+        margin-top: 30px;
+      }
+
+      .result .row {
+        display: flex;
+        justify-content: space-between;
+        padding: 8px 0;
+        border-bottom: 1px solid #eee;
+      }
+
+      .dark-mode .result .row {
+        border-color: #475569;
+      }
+
+      .result .label {
+        font-weight: 500;
+      }
+
+      .result .value {
+        font-weight: 600;
+        color: #0f172a;
+      }
+
+      .dark-mode .result .value {
+        color: #e2e8f0;
+      }
+
+      .highlight {
+        background-color: #e0f2fe;
+        padding: 10px;
+        border-radius: 8px;
+        margin-top: 15px;
+        font-weight: bold;
+      }
+
+      .dark-mode .highlight {
+        background-color: #334155;
+      }
+
+      .tull-box {
+        background-color: #e0f2fe;
+        padding: 15px;
+        border-radius: 8px;
+        font-family: 'Courier New', monospace;
+        margin-top: 20px;
+      }
+
+      .dark-mode .tull-box {
+        background-color: #334155;
+        color: #f1f5f9;
+      }
+
+      .tull-row {
+        white-space: pre;
+        padding: 2px 0;
+      }
+
+      .dropdown {
+        margin-bottom: 10px;
+      }
+
+      .dropdown-header {
+        background-color: #f0f4f8;
+        padding: 10px;
+        border-radius: 8px;
+        display: flex;
+        justify-content: space-between;
+        cursor: pointer;
+      }
+
+      .dark-mode .dropdown-header {
+        background-color: #475569;
+        color: #f1f5f9;
+      }
+
+      .dropdown-content {
+        background-color: #ffffff;
+        padding: 0 10px;
+        max-height: 0;
+        overflow: hidden;
+        opacity: 0;
+        transform: translateY(-10px);
+        transition: max-height 0.4s ease, opacity 0.4s ease, transform 0.4s ease;
+        margin-top: 5px;
+        border-radius: 8px;
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .dark-mode .dropdown-content {
+        background-color: #334155;
+        color: #f1f5f9;
+      }
+
+      .dropdown.open .dropdown-content {
+        max-height: 500px;
+        opacity: 1;
+        transform: translateY(0);
+        padding: 10px;
+      }
+
+      .rupiah-row {
+        display: flex;
+        justify-content: space-between;
+        font-family: 'Courier New', monospace;
+        padding: 2px 0;
+      }
+
+      .rupiah-row .label {
+        min-width: 290px;
+        white-space: pre;
+      }
+
+      .rupiah-row .value {
+        font-weight: 600;
+        color: #0f172a;
+      }
+
+      .dark-mode .rupiah-row .value {
+        color: #f1f5f9;
+      }
+
+      #themeToggle {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 8px 14px;
+        font-size: 14px;
+        border-radius: 8px;
+        z-index: 1000;
+      }
+
+      .value-positive {
+        color: green;
+      }
+
+      .value-negative {
+        color: red;
+      }
+
+      @media (max-width: 768px) {
+        .container {
+          padding: 20px;
+        }
+
+        input,
+        button {
+          font-size: 14px;
+          padding: 10px;
+        }
+
+        h1 {
+          font-size: 24px;
+        }
+
+        .result .row {
+          font-size: 14px;
+        }
+
+        .tull-row {
+          font-size: 14px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .tull-box {
+          padding: 10px;
+        }
+
+        .dropdown-header {
+          font-size: 14px;
+        }
+
+        .result .row {
+          font-size: 12px;
+        }
+
+        .result .label,
+        .result .value {
+          font-size: 14px;
+        }
+      }
+    </style> 
+ </head> 
+ <body> <button onclick="toggleTheme()" id="themeToggle"><span id="themeIcon">☀️</span> Ganti Tema</button> 
+  <div class="container"> 
+   <h1>Kalkulator Gaji</h1> 
+   <input type="number" id="overtimeHours" placeholder="Jam Lembur"> 
+   <input type="number" id="overtimeDays" placeholder="Hari Lembur"> <button onclick="calculateSalary()">Hitung</button> 
+   <div id="tull" class="tull-box"></div> 
+   <div class="result" id="result"></div> 
+  </div> 
+  <script>
+      function toggleDropdown(element) {
+        element.classList.toggle("open");
+      }
+
+      function formatRupiah(angka) {
+        return new Intl.NumberFormat('id-ID', {
+          style: 'currency',
+          currency: 'IDR'
+        }).format(angka);
+      }
+
+      function formatAngka(angka) {
+        return angka.toLocaleString('id-ID', {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2
+        }).padStart(12, ' ');
+      }
+
+      function toggleTheme() {
+        document.body.classList.toggle("dark-mode");
+        const icon = document.getElementById("themeIcon");
+        if (document.body.classList.contains("dark-mode")) {
+          icon.textContent = "🌙";
+        } else {
+          icon.textContent = "☀️";
+        }
+      }
+
+      window.onload = () => {
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+          document.body.classList.add("dark-mode");
+          document.getElementById("themeIcon").textContent = "🌙";
+        }
+      };
+
+      function createDropdown(title, items, total) {
+        const list = items.map(item => {
+          return `<div class="rupiah-row">${item}</div>`;
+        }).join('');
+        return `
+          <div class="dropdown" onclick="toggleDropdown(this)">
+            <div class="dropdown-header">
+              <span>${title}</span>
+              <span>${total}</span>
+            </div>
+            <div class="dropdown-content">
+              ${list}
+            </div>
+          </div>
+        `;
+      }
+
+      function calculateSalary() {
+        const overtimeHours = parseFloat(document.getElementById("overtimeHours").value) || 0;
+        const overtimeDays = parseFloat(document.getElementById("overtimeDays").value) || 0;
+
+        const transportasi_hr = 22;
+        const mkn_harian = 22;
+
+        const transportasi = 22500;
+        const mkn_hr = 20000;
+        const mkn_lbr = 20000;
+        const ot = 40107;
+
+        const gaji_pokok = 6263446;
+        const tunj_jbtn = 150000;
+        const tunj_keahlian = 30000;
+        const tunj_pnddkn = 15000;
+        const tunj_seniorts = 480000;
+        const total_ttp = gaji_pokok + tunj_jbtn + tunj_keahlian + tunj_pnddkn + tunj_seniorts;
+
+        const tnj_transport = transportasi_hr * transportasi;
+        const tnj_mkn_hr = mkn_harian * mkn_hr;
+        const tnj_mkn_lbr = overtimeDays * mkn_lbr;
+        const tnj_lembur = overtimeHours * ot;
+        const total_tdk_ttp = tnj_transport + tnj_mkn_hr + tnj_mkn_lbr + tnj_lembur;
+
+        const gros_pndptn1bln = total_ttp + total_tdk_ttp;
+
+        const bpjstk = total_ttp * 0.02;
+        const jp = total_ttp * 0.01;
+        const bpjs = total_ttp * 0.01;
+        const pajak = gros_pndptn1bln * 0.02;
+        const total_pot = bpjstk + jp + bpjs + pajak;
+
+        const net_pndptn1bln = gros_pndptn1bln - total_pot;
+
+        const mandiri = 2837596;
+        const nafkah = 3500000;
+        const kontrakan = 500000;
+        const zkt_pnghsln = net_pndptn1bln * 0.025;
+        const total_peng_ttp = mandiri + nafkah + kontrakan + zkt_pnghsln;
+
+        const bensin = 280000;
+        const srv_mtr = 70000;
+        const internet = 100000;
+        const makan = 30000 * 26;
+        const total_peng_tdk_ttp = bensin + srv_mtr + internet + makan;
+
+        const total_peng = total_peng_ttp + total_peng_tdk_ttp;
+        const ths = net_pndptn1bln - total_peng;
+
+        document.getElementById("tull").innerHTML = `
+          <div class="tull-row">Tunjangan Transportasi @hari : Rp ${formatAngka(transportasi)}</div>
+          <div class="tull-row">Tunjangan Makan Harian @hari : Rp ${formatAngka(mkn_hr)}</div>
+          <div class="tull-row">Tunjangan Makan Lembur @hari : Rp ${formatAngka(mkn_lbr)}</div>
+          <div class="tull-row">Tunjangan Lembur @jam        : Rp ${formatAngka(ot)}</div>
+        `;
+
+        document.getElementById("result").innerHTML = `
+          ${createDropdown('Pendapatan Tetap', [
+            `<span class="label">Gaji Pokok                         :</span><span class="value">Rp ${formatAngka(gaji_pokok)}</span>`,
+            `<span class="label">Tunjangan Jabatan                  :</span><span class="value">Rp ${formatAngka(tunj_jbtn)}</span>`,
+            `<span class="label">Tunjangan Keahlian                 :</span><span class="value">Rp ${formatAngka(tunj_keahlian)}</span>`,
+            `<span class="label">Tunjangan Pendidikan               :</span><span class="value">Rp ${formatAngka(tunj_pnddkn)}</span>`,
+            `<span class="label">Tunjangan Senioritas               :</span><span class="value">Rp ${formatAngka(tunj_seniorts)}</span>`
+          ], formatRupiah(total_ttp))}
+
+          ${createDropdown('Pendapatan Tidak Tetap', [
+            `<span class="label">Tunjangan Transportasi             :</span><span class="value">Rp ${formatAngka(tnj_transport)}</span>`,
+            `<span class="label">Tunjangan Makan Harian             :</span><span class="value">Rp ${formatAngka(tnj_mkn_hr)}</span>`,
+            `<span class="label">Tunjangan Makan Lembur             :</span><span class="value">Rp ${formatAngka(tnj_mkn_lbr)}</span>`,
+            `<span class="label">Tunjangan Lembur                   :</span><span class="value">Rp ${formatAngka(tnj_lembur)}</span>`
+          ], formatRupiah(total_tdk_ttp))}
+
+          ${createDropdown('Gaji Kotor', [
+            `<span class="label">Total Pendapatan                   :</span><span class="value">Rp ${formatAngka(gros_pndptn1bln)}</span>`
+          ], formatRupiah(gros_pndptn1bln))}
+
+          ${createDropdown('Potongan', [
+            `<span class="label">BPJS Kesehatan                     :</span><span class="value">Rp ${formatAngka(bpjs)}</span>`,
+            `<span class="label">BPJS Ketenagakerjaan               :</span><span class="value">Rp ${formatAngka(bpjstk)}</span>`,
+            `<span class="label">Pajak                              :</span><span class="value">Rp ${formatAngka(pajak)}</span>`
+          ], formatRupiah(total_pot))}
+
+          ${createDropdown('Gaji Bersih', [
+            `<span class="label">Pendapatan Bersih                  :</span><span class="value">Rp ${formatAngka(net_pndptn1bln)}</span>`
+          ], formatRupiah(net_pndptn1bln))}
+
+          ${createDropdown('Total Pengeluaran', [
+            `<span class="label">Pengeluaran Tetap                  :</span><span class="value">Rp ${formatAngka(total_peng_ttp)}</span>`,
+            `<span class="label"> - Mandiri                         :</span><span class="value">Rp ${formatAngka(mandiri)}</span>`,
+            `<span class="label"> - Nafkah                          :</span><span class="value">Rp ${formatAngka(nafkah)}</span>`,
+            `<span class="label"> - Kontrakan                       :</span><span class="value">Rp ${formatAngka(kontrakan)}</span>`,
+            `<span class="label"> - Zakat Penghasilan               :</span><span class="value">Rp ${formatAngka(zkt_pnghsln)}</span>`
+          ], formatRupiah(total_peng))}
+
+          ${createDropdown('Sisa Gaji', [
+            `<span class="label">Sisa Gaji Setelah Pengeluaran      :</span> 
+             <span class="value ${ths < 0 ? 'value-negative' : 'value-positive'}">Rp ${formatAngka(ths)}</span>`
+          ], '')}
+        `;
+      }
+    </script> 
+ </body>
+</html>
